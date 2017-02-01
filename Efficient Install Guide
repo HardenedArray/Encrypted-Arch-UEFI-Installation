@@ -7,8 +7,8 @@
 # That guide resides at:  https://wiki.archlinux.org/index.php/Installation_Guide
 
 # Download the archlinux-*.iso image from https://www.archlinux.org/download/ and its GnuPG signature.
-# Use gpg --verify to ensure your *.iso is exactly what the Arch developers intended.
-# Burn the Arch *.iso  to a 1+ Gb USB stick.  On linux, do something like:
+# Use gpg --verify to ensure your archlinux-*.iso is exactly what the Arch developers intended.
+# Burn the archlinux-*.iso  to a 1+ Gb USB stick.  On linux, do something like:
 
 dd if=archlinux-*.iso of=/dev/sdX bs=16M && sync  
 
