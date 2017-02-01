@@ -1,0 +1,176 @@
+
+# **OBJECTIVE:  Install ARCH Linux with encrypted root and swap filesystems and boot from UEFI.**
+
+# Note:  This method supports both dedicated Arch installs and those who wish to install Arch on a multi-OS-UEFI booting system.
+
+# The official installation guide (https://wiki.archlinux.org/index.php/Installation_Guide) contains details that you should refer to during this installation process.  
+
+# Download the download, and archiso image from https://www.archlinux.org/download/
+# Use GnuPG to gpg --verify your download.
+# Burn the Arch *.iso  to a 1+ Gb USB stick.  On linux, do something like:
+
+dd if=archlinux-*.iso of=/dev/sdX bs=16M && sync  
+
+# If running Windows, use Rufus to burn the archlinux-*.iso to your USB stick in DD mode.
+
+# UEFI-Boot from your USB stick. If your USB stick fails to boot, ensure that Secure Boot is disabled in your UEFI configuration.
+
+# Set your keymap only if not you are not using the default English language.
+
+# It is typically wiser to be hard wired to the Net during installation. However, Arch supports WiFi-only installs.
+# Connect to WiFi using:
+
+wifi-menu
+
+# Create and size partitions appropriate to your goals using gdisk
+# Carefully Note:  Multi-OS booters who have an existing EFI partition on their drive should NOT create a new EFI partition.  
+# Instead, we will append Arch as another OS to your existing EFI partition.  See my Multi-OS-Booting Notes, below.
+
+gdisk /dev/sdX
+
+# Create the partitions you need:
+
+Partition X = 100 MiB EFI partition # Hex code EF00
+Partition Y = 250 MiB Boot partition # Hex code 8300
+Partition Z = Choose a reasonable size for your encrypted root and swap system partition, or just size it to the last sector of your drive. # Hex code 8300.  
+
+# Write your gdisk changes with 'w'.  
+# Reboot, if necessary, so the kernel reads your new partition structure.
+
+# Create filesystems for /boot/efi and /boot
+
+mkfs.vfat -F 32 /dev/sdXX
+mkfs.ext2 /dev/sdXY
+
+# Encrypt and open your system partition
+
+cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random luksFormat /dev/sdXZ
+
+cryptsetup luksOpen /dev/sdXZ 2016-Global-OpSec-Champion-LyingHillary # (or use any word or phrase you're fond of)
+
+# Create encrypted LVM partitions
+
+# These steps create a required root partition and an optional partition for swap.
+# Modify this structure only if you need additional, separate partitions.  The sizes used below are only suggestions.
+# The VG and LV labels 'Arch, root and swap' can be changed to anything memorable to you.  Use your labels consistently, below!
+
+pvcreate /dev/mapper/2016-Global-OpSec-Champion-LyingHillary
+vgcreate Arch /dev/mapper/2016-Global-OpSec-Champion-LyingHillary
+lvcreate -L +512M Arch -n swap
+lvcreate -l +100%FREE Arch -n root
+
+# Create filesystems on your encrypted partitions
+
+mkfs.ext4 /dev/mapper/Arch-root
+mkswap /dev/mapper/Arch-swap
+
+# Mount the new system 
+
+mount /dev/mapper/Arch-root /mnt
+swapon /dev/mapper/Arch-swap
+mkdir /mnt/boot
+mount /dev/sdXY /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sdXX /mnt/boot/efi
+
+# Install your Arch system
+# This command provides a decent set of basic system programs which will also support WiFi when initially booting into your Arch system.
+
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog wpa_supplicant
+
+# Create and review FSTAB
+
+genfstab -U /mnt >> /mnt/etc/fstab  # The -U option pulls in all the correct UUIDs for your mounted filesystems.
+nano /mnt/etc/fstab  # Check your fstab carefully, and modify it, if required.
+
+# Enter the new system
+
+arch-chroot /mnt /bin/bash
+
+# Set the system clock
+
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
+hwclock --systohc --utc
+
+# Assign your hostname
+
+echo MyHostName > /etc/hostname
+
+# Set or update your locale
+
+# If English is your native language, you need to edit exactly two lines to correctly configure your locale language settings:
+
+a. In /etc/locale.gen **uncomment only**: en_US.UTF-8 UTF-8
+b. In /etc/locale.conf, you should **only** have this line: **LANG=en_US.UTF-8**
+
+# Now run:
+
+locale-gen
+
+# Set your root password
+
+passwd
+
+# Create a User, assign appropriate Group membership, and set a User password.  'Wheel' is just one important Group.
+
+useradd -m -G wheel -s /bin/bash MyUserName
+
+passwd MyUserName
+
+# Configure mkinitcpio with the correct HOOKS required for your initrd image
+
+nano /etc/mkinitcpio.conf
+
+# Use this HOOKS statement:
+
+HOOKS="base udev autodetect modconf block keymap encrypt lvm2 resume filesystems keyboard fsck"
+
+# Generate your initrd image
+
+mkinitcpio -p linux
+
+# Install and configure Grub-EFI
+
+# The correct way to install grub on an UEFI computer, irrespective of your use of a HDD or SSD, and whether you are installing dedicated # Arch, or multi-OS booting, is:
+
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchLinux
+
+# Edit /etc/default/grub so it includes a statement like this:
+
+# GRUB_CMDLINE_LINUX="cryptdevice=/dev/sdYZ:MyDevMapperMountpoint resume=/dev/mapper/MyVolGroupName-MyLVSwapName"
+
+# Maintaining consistency with the examples provided above, you would use something like:
+
+GRUB_CMDLINE_LINUX="cryptdevice=/dev/sdXZ:2016-Global-OpSec-Champion-LyingHillary resume=/dev/mapper/Arch-swap"
+
+# Generate Your Final Grub Configuration:
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Exit Your New Arch System
+
+exit
+
+# Unmount all partitions
+
+umount -R /mnt
+swapoff -a
+
+# Reboot and Enjoy Your Encrypted Arch Linux System!
+
+reboot
+
+__________________________
+
+Multi-OS-Booting Notes
+
+I UEFI boot and run more than five operating systems from my SSD.
+All of my OSes UEFI boot from my single, 100 MiB, EFI partition.
+All of my OSes have encrypted root and swap, utilizing my SSD's native hardware-based AES-256-bit encryption support
+with BitLocker or Linux's software-based LUKS on LVM encryption to secure my data, when at rest.
+My Arch Linux install is just another encrypted Linux OS installation that happens to reside on my SSD.
+
+If you multi-boot, ensure you mount Arch's /boot/efi at your existing ESP partition.
+If you installed Windows 10 first, your EFI partition is likely to be /dev/sda2.
+
+In all cases, /boot, /boot/efi, and '/' partitions are required to be mounted during installation, at a minimum.
