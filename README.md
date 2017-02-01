@@ -1,1 +1,1 @@
-# Encrypted-Arch-UEFI-Installation
+# Efficient Encrypted Arch UEFI Installation Guide
