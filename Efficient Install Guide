@@ -1,12 +1,13 @@
 
-# **OBJECTIVE:  Install ARCH Linux with encrypted root and swap filesystems and boot from UEFI.**
+# OBJECTIVE:  Install ARCH Linux with encrypted root and swap filesystems and boot from UEFI.
 
 # Note:  This method supports both dedicated Arch installs and those who wish to install Arch on a multi-OS-UEFI booting system.
 
-# The official installation guide (https://wiki.archlinux.org/index.php/Installation_Guide) contains details that you should refer to during this installation process.  
+# The official Arch installation guide contains details that you should refer to during this installation process.
+# That guide resides at:  https://wiki.archlinux.org/index.php/Installation_Guide
 
-# Download the download, and archiso image from https://www.archlinux.org/download/
-# Use GnuPG to gpg --verify your download.
+# Download the archlinux-*.iso image from https://www.archlinux.org/download/ and its GnuPG signature.
+# Use gpg --verify to ensure your *.iso is exactly what the Arch developers intended.
 # Burn the Arch *.iso  to a 1+ Gb USB stick.  On linux, do something like:
 
 dd if=archlinux-*.iso of=/dev/sdX bs=16M && sync  
