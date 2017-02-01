@@ -7,7 +7,17 @@
 # That guide resides at:  https://wiki.archlinux.org/index.php/Installation_Guide
 
 # Download the archlinux-*.iso image from https://www.archlinux.org/download/ and its GnuPG signature.
-# Use gpg --verify to ensure your archlinux-*.iso is exactly what the Arch developers intended.
+# Use gpg --verify to ensure your archlinux-*.iso is exactly what the Arch developers intended.  For example:
+
+$ gpg --verify archlinux-2017.01.01-dual.iso.sig 
+gpg: assuming signed data in 'archlinux-2017.01.01-dual.iso'
+gpg: Signature made Sun 01 Jan 2017 04:06:24 PM UTC
+gpg:                using RSA key 4AA4767BBC9C4B1D18AE28B77F2D434B9741E8AC
+gpg: Good signature from "Pierre Schmitz <pierre@archlinux.de>" [unknown]
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 4AA4 767B BC9C 4B1D 18AE  28B7 7F2D 434B 9741 E8AC
+
 # Burn the archlinux-*.iso  to a 1+ Gb USB stick.  On linux, do something like:
 
 dd if=archlinux-*.iso of=/dev/sdX bs=16M && sync  
@@ -161,9 +171,28 @@ swapoff -a
 
 reboot
 
+One Post-Install Recommendation To Speed Up All Your Future Installs - Rank Your Mirrors, First!
+
+It's a simple procedure, and will save you a lot of downloading time, particulary if you are planning 
+on doing any mass-installs, like gnome, gnome-extra, or similar.
+
+As root, run:
+
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+rankmirrors -n 6 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
+
+That will test all the mirrors and grab the six fastest from your location.  It takes a while to complete,
+so go grab a cup of java.  
+
+Upon your return, you'll be ready to use pacman as it was intended, crazy-fast!
+
+Cheers,
+
+HardenedArray
+
 __________________________
 
-Multi-OS-Booting Notes
+Multi-OS-Booting Notes:
 
 I UEFI boot and run more than five operating systems from my SSD.
 All of my OSes UEFI boot from my single, 100 MiB, EFI partition.
@@ -174,4 +203,24 @@ My Arch Linux install is just another encrypted Linux OS installation that happe
 If you multi-boot, ensure you mount Arch's /boot/efi at your existing ESP partition.
 If you installed Windows 10 first, your EFI partition is likely to be /dev/sda2.
 
-In all cases, /boot, /boot/efi, and '/' partitions are required to be mounted during installation, at a minimum.
+In all cases, /boot, /boot/efi, and '/' partitions are required to be mounted during Arch installation.
+
+BitLocker Users on Windows Notes:
+
+If you are running hardware-based BitLocker encryption on Windows, I recommend you Turn Off BitLocker encryption prior to
+installing Arch, or any other operating system.  
+
+As I don't use software-based BitLocker, I cannot say whether leaving it enabled during Arch installation will cause problems.
+Obviously, if you experience issues, you could turn BitLocker off temporarily.
+
+You can tell if you are using AES-256 bit hardware-based BitLocker encryption when you run:
+PS C:\WINDOWS\system32> manage-bde -status 
+You see this line:
+Encryption Method:    Hardware Encryption - 1.3.111.2.1619.0.1.2
+
+Also note that hardware-based BitLocker can either encrypt, or decrypt, a multi-hundred GiB drive in less than 3 seconds.
+You can re-enable BitLocker after your new encrypted Arch system is UEFI booting correctly and running smoothly.
+
+
+
+
