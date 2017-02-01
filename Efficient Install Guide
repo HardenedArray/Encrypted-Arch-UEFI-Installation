@@ -43,7 +43,8 @@ gdisk /dev/sdX
 
 Partition X = 100 MiB EFI partition # Hex code EF00
 Partition Y = 250 MiB Boot partition # Hex code 8300
-Partition Z = Choose a reasonable size for your encrypted root and swap system partition, or just size it to the last sector of your drive. # Hex code 8300.  
+Partition Z = Choose a reasonable size for your encrypted root and swap system partition, or just size it to the 
+last sector of your drive. # Hex code 8300.  
 
 # Write your gdisk changes with 'w'.  
 # Reboot, if necessary, so the kernel reads your new partition structure.
@@ -85,7 +86,8 @@ mkdir /mnt/boot/efi
 mount /dev/sdXX /mnt/boot/efi
 
 # Install your Arch system
-# This command provides a decent set of basic system programs which will also support WiFi when initially booting into your Arch system.
+# This command provides a decent set of basic system programs which will also support WiFi when initially booting 
+# into your Arch system.
 
 pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog wpa_supplicant
 
@@ -142,7 +144,8 @@ mkinitcpio -p linux
 
 # Install and configure Grub-EFI
 
-# The correct way to install grub on an UEFI computer, irrespective of your use of a HDD or SSD, and whether you are installing dedicated # Arch, or multi-OS booting, is:
+# The correct way to install grub on an UEFI computer, irrespective of your use of a HDD or SSD, and whether 
+# you are installing dedicated # Arch, or multi-OS booting, is:
 
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchLinux
 
