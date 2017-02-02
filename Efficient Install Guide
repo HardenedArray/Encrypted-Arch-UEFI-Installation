@@ -210,7 +210,7 @@ If you installed Windows 10 first, your EFI partition is likely to be /dev/sda2.
 
 In all cases, /boot, /boot/efi, and '/' partitions, at a minimum, are required to be mounted during Arch installation.
 
-As an example, an EFI-addicted, multi-OS booter might be doing somthing like:
+As an example, an EFI-addicted, multi-OS booter might be doing something like:
 
 mount /dev/mapper/Arch-root /mnt
 swapon /dev/mapper/Arch-swap
