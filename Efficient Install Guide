@@ -202,7 +202,7 @@ fs0:
 Save and exit nano.  To test that you will no longer be dropped to the EFI Shell prompt, poweroff, not reboot, and fire up 
 your Arch Linux system again.
 
-If you simply cannot bear the agony of the EFI Shell's five second wait prior its loading of startup.nsh, hit any key, 
+If you simply cannot bear the agony of the EFI Shell's five second wait prior to its loading of startup.nsh, hit any key, 
 except for 'esc', and you should be immediately directed to your (hopefully, beautifully configured) grub graphical 
 Arch Linux boot screen.
 
