@@ -180,7 +180,8 @@ swapoff -a
 reboot
 __________________________ 
 
-If you ever get dropped to the EFI Shell prompt when powering up Arch Linux, do the following.
+If you ever get dropped to the EFI Shell prompt when powering up Arch Linux, which I most often notice within 
+ArchLinux VBox UEFI-enabled Guest Systems, do the following:
 
 At the Shell prompt, type the following entries, as indicated (also remember we used --bootloader-id=ArchLinux, above):
 
@@ -193,21 +194,26 @@ To prevent being dropped to the EFI Shell prompt in the future, enter your Arch 
 
 # nano /boot/efi/startup.nsh
 
-To your startup.nsh file, add these two lines:
+In your startup.nsh file, add these two lines:
 
 fs0:
-fs0:\EFI\ArchLinux\grubx64.efi  
+\EFI\ArchLinux\grubx64.efi  
 
 Save and exit nano.  To test that you will no longer be dropped to the EFI Shell prompt, poweroff, not reboot, and fire up 
 your Arch Linux system again.
 
+If you simply cannot bear the agony of the EFI Shell's five second wait prior its loading of startup.nsh, hit any key, 
+except for 'esc', and you should be immediately directed to your (hopefully, beautifully configured) grub graphical 
+Arch Linux boot screen.
+
 This solution also works when you have installed Arch Linux as an UEFI-enabled Guest system within VirtualBox.
+
 __________________________
 
 One Post-Install Recommendation To Optimize the Speed of All Your Future Installs - Rank Your Mirrors, First!
 
-It's a very simple procedure, and will save you a lot of downloading time over your Arch lifetime, particulary
-if you are planning on doing any mass-installs, like gnome, gnome-extra, or similar.
+It's a very simple procedure, and will save you a lot of downloading time over your Arch Linux lifetime, particulary
+if you are planning on doing any mass-installs, like gnome, gnome-extra, plasma-meta or similar.
 
 As root, run:
 
