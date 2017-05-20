@@ -1,3 +1,4 @@
+
 # OBJECTIVE:  Install Arch Linux with encrypted root and swap filesystems and boot from UEFI.
 
 # Note:  This method supports both dedicated Arch installs and those who wish to install Arch on a multi-OS-UEFI booting system.
@@ -178,7 +179,9 @@ swapoff -a
 # Reboot and Enjoy Your Encrypted Arch Linux System!
 
 reboot
+
 __________________________ 
+
 
 If you ever get dropped to the EFI Shell prompt when powering up Arch Linux, which I most often notice within 
 ArchLinux VBox UEFI-enabled Guest Systems, do the following:
@@ -210,10 +213,11 @@ This solution also works when you have installed Arch Linux as an UEFI-enabled G
 
 __________________________
 
+
 One Post-Install Recommendation To Optimize the Speed of All Your Future Installs - Rank Your Mirrors, First!
 
-It's a very simple procedure, and will save you a lot of downloading time over your Arch Linux lifetime, particulary
-if you are planning on doing any mass-installs, like gnome, gnome-extra, plasma-meta or similar.
+It's a very simple procedure, and will save you a lot of downloading time over your Arch Linux lifetime, particularly
+if you are planning on doing any mass-installs, like gnome, gnome-extra, kde-meta or similar.
 
 As root, run:
 
@@ -230,6 +234,7 @@ Cheers, and now it is time to Go Rock Your Arch!
 HardenedArray
 
 __________________________
+
 
 Multi-OS-Booting Notes:
 
@@ -253,7 +258,7 @@ mount /dev/sda17 /mnt/boot
 mkdir /mnt/boot/efi
 mount /dev/sda2 /mnt/boot/efi
 
-In this example, the user is likely to be using /dev/sda18 as the physical drive partition where their encrpyted
+In this example, the user is likely to be using /dev/sda18 as the physical drive partition where their encrypted
 Arch root and swap filesystems will reside.  Note the user's re-use of their existing EFI partition which resides
 at /dev/sda2.
 
@@ -266,7 +271,9 @@ Following successful Arch system installation, the path to your Arch-EFI boot fi
 When you are multi-OS booting correctly, you should have one directory per operating system, each residing at:
 
 /boot/efi/EFI/
+
 __________________________
+
 
 BitLocker Users on Windows Notes:
 
@@ -283,5 +290,5 @@ Encryption Method:    Hardware Encryption - 1.3.111.2.1619.0.1.2
 
 Also note that hardware-based BitLocker can either encrypt, or decrypt, a multi-hundred GiB drive in less than 3 seconds.
 You can re-enable BitLocker after your new encrypted Arch system is UEFI booting correctly and running smoothly.
-__________________________
 
+__________________________
